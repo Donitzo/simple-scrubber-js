@@ -152,13 +152,22 @@ const drawScrubber = options => {
 
     if (pillVisible) {
         ctx.beginPath();
-        ctx.roundRect(
-            pillRect.left,
-            pillRect.top,
-            pillRect.right - pillRect.left,
-            pillRect.bottom - pillRect.top,
-            PILL_HEIGHT / 2
-        );
+        if (ctx.roundRect) {
+            ctx.roundRect(
+                pillRect.left,
+                pillRect.top,
+                pillRect.right - pillRect.left,
+                pillRect.bottom - pillRect.top,
+                PILL_HEIGHT / 2
+            );
+        } else {
+            ctx.rect(
+                pillRect.left,
+                pillRect.top,
+                pillRect.right - pillRect.left,
+                pillRect.bottom - pillRect.top
+            );
+        }
 
         ctx.fillStyle = PILL_COLOR;
         ctx.fill();
