@@ -1,5 +1,7 @@
 # Simple Scrubber JS
 
+ ![](screenshot.png)
+
 A small JavaScript library for adding visual scrubbers to regular HTML number inputs.
 
 Try the demo on GitHub pages: [https://donitzo.github.io/simple-scrubber-js](https://donitzo.github.io/simple-scrubber-js)
