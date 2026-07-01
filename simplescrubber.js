@@ -34,14 +34,31 @@ const setInputValue = (input, value, shouldCommit) => {
     }
 };
 
+const getViewport = () => {
+    const viewport = window.visualViewport;
+
+    return {
+        width: viewport ? viewport.width : window.innerWidth,
+        height: viewport ? viewport.height : window.innerHeight,
+        offsetLeft: viewport ? viewport.offsetLeft : 0,
+        offsetTop: viewport ? viewport.offsetTop : 0,
+    };
+};
+
 const resizeOverlayCanvas = () => {
-    overlay.width = window.innerWidth;
-    overlay.height = window.innerHeight;
+    const viewport = getViewport();
+    const dpr = window.devicePixelRatio || 1;
 
-    const dpr = window.devicePixelRatio ?? 1;
+    overlay.width = viewport.width;
+    overlay.height = viewport.height;
 
-    overlay.canvas.width = Math.round(overlay.width * dpr);
-    overlay.canvas.height = Math.round(overlay.height * dpr);
+    overlay.canvas.style.width = `${viewport.width}px`;
+    overlay.canvas.style.height = `${viewport.height}px`;
+    overlay.canvas.style.left = `${viewport.offsetLeft}px`;
+    overlay.canvas.style.top = `${viewport.offsetTop}px`;
+
+    overlay.canvas.width = Math.round(viewport.width * dpr);
+    overlay.canvas.height = Math.round(viewport.height * dpr);
 
     overlay.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 };
@@ -300,18 +317,22 @@ window.addEventListener('load', () => {
     Object.assign(overlay.canvas.style, {
         background: 'transparent',
         display: 'none',
-        height: '100vh',
-        inset: '0',
+        left: '0px',
         pointerEvents: 'none',
         position: 'fixed',
-        width: '100vw',
+        top: '0px',
         zIndex: '100000',
     });
 
     document.body.appendChild(overlay.canvas);
 
     resizeOverlayCanvas();
+    
     window.addEventListener('resize', resizeOverlayCanvas);
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
+    }
 
     createScrubbers();
 });
