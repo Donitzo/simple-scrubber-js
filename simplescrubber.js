@@ -258,6 +258,7 @@ const attachScrubber = input => {
             input.removeEventListener('pointermove', onPointerMove);
             input.removeEventListener('pointerup', onPointerUp);
             input.removeEventListener('pointercancel', onPointerUp);
+            input.removeEventListener('lostpointercapture', onPointerUp);
 
             if (dragged) {
                 setInputValue(input, latestValue, true);
@@ -271,6 +272,7 @@ const attachScrubber = input => {
         input.addEventListener('pointermove', onPointerMove);
         input.addEventListener('pointerup', onPointerUp);
         input.addEventListener('pointercancel', onPointerUp);
+        input.addEventListener('lostpointercapture', onPointerUp);
     });
 };
 
