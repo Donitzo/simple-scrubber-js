@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Simple Scrubber Demo</title>
+
+        <style>
+body {
+    background: #f6f8fb;
+}
+
+main {
+    margin: 0 auto;
+    width: 700px;
+}
+
+section {
+    background: #fff;
+    border: 1px solid #dde3ee;
+    border-radius: 16px;
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+}
+
+label {
+    display: grid;
+    gap: 8px;
+}
+
+input[type="number"] {
+    border: 1px solid #bcc7d8;
+    border-radius: 4px;
+    font: inherit;
+    padding: 5px;
+    width: 70px;
+}
+        </style>
+
+        <script src="./simple-scrubber.js"></script>
+    </head>
+    <body>
+        <main>
+            <h1>Simple Scrubber Demo</h1>
+
+            <p>
+                Drag the number inputs to scrub their values.
+                The distance per step is controlled with
+                <code>data-scrubber-pixels-per-step</code>.
+            </p>
+
+            <p>
+                After dynamically adding new number inputs, call
+                <code>window.createNumberScrubbers()</code>.
+            </p>
+
+            <section>
+                <label>
+                    Width
+                    <input
+                        type="number"
+                        value="320"
+                        min="0"
+                        max="1280"
+                        step="10"
+                        data-scrubber-pixels-per-step="8"
+                    >
+                </label>
+
+                <label>
+                    Opacity
+                    <input
+                        type="number"
+                        value="1"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        data-scrubber-pixels-per-step="12"
+                    >
+                </label>
+
+                <label>
+                    Rotation
+                    <input
+                        type="number"
+                        value="0"
+                        min="-180"
+                        max="180"
+                        step="1"
+                        data-scrubber-pixels-per-step="1"
+                    >
+                </label>
+
+                <label>
+                    Vertical scrubber
+                    <input
+                        type="number"
+                        value="50"
+                        min="0"
+                        max="100"
+                        step="5"
+                        data-scrubber-pixels-per-step="8"
+                        data-scrubber-vertical
+                    >
+                </label>
+            </section>
+        </main>
+    </body>
+</html>
