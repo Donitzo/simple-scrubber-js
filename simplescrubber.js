@@ -106,10 +106,12 @@ const drawScrubber = options => {
                 ? Math.min(options.y, anchorY)
                 : Math.max(options.y, anchorY);
 
-        ctx.beginPath();
-        ctx.moveTo(lineX, anchorY);
-        ctx.lineTo(lineX, lineEndY);
-        ctx.stroke();
+        if (anchorY !== lineEndY) {
+            ctx.beginPath();
+            ctx.moveTo(lineX, anchorY);
+            ctx.lineTo(lineX, lineEndY);
+            ctx.stroke();
+        }
     } else {
         const lineY = controlRect.top + controlRect.height / 2;
         const controlCenterX = controlRect.left + controlRect.width / 2;
@@ -137,10 +139,12 @@ const drawScrubber = options => {
                 ? Math.min(options.x, anchorX)
                 : Math.max(options.x, anchorX);
 
-        ctx.beginPath();
-        ctx.moveTo(anchorX, lineY);
-        ctx.lineTo(lineEndX, lineY);
-        ctx.stroke();
+        if (anchorX !== lineEndX) {
+            ctx.beginPath();
+            ctx.moveTo(anchorX, lineY);
+            ctx.lineTo(lineEndX, lineY);
+            ctx.stroke();
+        }
     }
 
     if (pillVisible) {
