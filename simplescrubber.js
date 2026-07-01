@@ -37,6 +37,46 @@ const setInputValue = (input, value, shouldCommit) => {
 const getViewport = () => {
     const viewport = window.visualViewport;
 
+    if (viewport) {
+        return {
+            left: viewport.pageLeft,
+            top: viewport.pageTop,
+            width: viewport.width,
+            height: viewport.height,
+        };
+    }
+
+    return {
+        left: window.scrollX,
+        top: window.scrollY,
+        width: window.innerWidth,
+        height: window.innerHeight,
+    };
+};
+
+const resizeOverlayCanvas = () => {
+    const viewport = getViewport();
+    const dpr = window.devicePixelRatio || 1;
+
+    overlay.width = viewport.width;
+    overlay.height = viewport.height;
+
+    Object.assign(overlay.canvas.style, {
+        left: `${viewport.left}px`,
+        top: `${viewport.top}px`,
+        width: `${viewport.width}px`,
+        height: `${viewport.height}px`,
+    });
+
+    overlay.canvas.width = Math.round(viewport.width * dpr);
+    overlay.canvas.height = Math.round(viewport.height * dpr);
+
+    overlay.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+};
+
+const getViewport = () => {
+    const viewport = window.visualViewport;
+
     return {
         width: viewport ? viewport.width : window.innerWidth,
         height: viewport ? viewport.height : window.innerHeight,
@@ -317,10 +357,10 @@ window.addEventListener('load', () => {
     Object.assign(overlay.canvas.style, {
         background: 'transparent',
         display: 'none',
-        left: '0px',
+        left: '0',
+        top: '0',
         pointerEvents: 'none',
-        position: 'fixed',
-        top: '0px',
+        position: 'absolute',
         zIndex: '100000',
     });
 
