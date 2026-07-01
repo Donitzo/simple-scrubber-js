@@ -330,9 +330,13 @@ window.addEventListener('load', () => {
     
     window.addEventListener('resize', resizeOverlayCanvas);
 
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
-    }
+window.addEventListener('resize', resizeOverlayCanvas);
+window.addEventListener('scroll', resizeOverlayCanvas);
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
+    window.visualViewport.addEventListener('scroll', resizeOverlayCanvas);
+}
 
     createScrubbers();
 });
