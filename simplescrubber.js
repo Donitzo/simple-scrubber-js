@@ -327,16 +327,14 @@ window.addEventListener('load', () => {
     document.body.appendChild(overlay.canvas);
 
     resizeOverlayCanvas();
-    
+
     window.addEventListener('resize', resizeOverlayCanvas);
-
-window.addEventListener('resize', resizeOverlayCanvas);
-window.addEventListener('scroll', resizeOverlayCanvas);
-
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
-    window.visualViewport.addEventListener('scroll', resizeOverlayCanvas);
-}
+    window.addEventListener('scroll', resizeOverlayCanvas);
+    
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
+        window.visualViewport.addEventListener('scroll', resizeOverlayCanvas);
+    }
 
     createScrubbers();
 });
