@@ -23,7 +23,10 @@ const setInputValue = (input, value, shouldCommit) => {
     const min = input.min === '' ? -Infinity : Number(input.min);
     const max = input.max === '' ? Infinity : Number(input.max);
 
-    input.value = String(Math.min(Math.max(value, min), max));
+    const clampedValue = Math.min(Math.max(value, min), max);
+    const roundedValue = Number(clampedValue.toFixed(15));
+    
+    input.value = String(roundedValue);
 
     input.dispatchEvent(new Event('input', { bubbles: true }));
     if (shouldCommit) {
