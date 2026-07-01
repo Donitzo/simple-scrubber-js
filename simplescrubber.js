@@ -74,35 +74,6 @@ const resizeOverlayCanvas = () => {
     overlay.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 };
 
-const getViewport = () => {
-    const viewport = window.visualViewport;
-
-    return {
-        width: viewport ? viewport.width : window.innerWidth,
-        height: viewport ? viewport.height : window.innerHeight,
-        offsetLeft: viewport ? viewport.offsetLeft : 0,
-        offsetTop: viewport ? viewport.offsetTop : 0,
-    };
-};
-
-const resizeOverlayCanvas = () => {
-    const viewport = getViewport();
-    const dpr = window.devicePixelRatio || 1;
-
-    overlay.width = viewport.width;
-    overlay.height = viewport.height;
-
-    overlay.canvas.style.width = `${viewport.width}px`;
-    overlay.canvas.style.height = `${viewport.height}px`;
-    overlay.canvas.style.left = `${viewport.offsetLeft}px`;
-    overlay.canvas.style.top = `${viewport.offsetTop}px`;
-
-    overlay.canvas.width = Math.round(viewport.width * dpr);
-    overlay.canvas.height = Math.round(viewport.height * dpr);
-
-    overlay.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-};
-
 const drawScrubber = options => {
     const ctx = overlay.ctx;
     if (ctx === null) {
