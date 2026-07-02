@@ -1,3 +1,8 @@
+/*!
+ * simplescrubber.js
+ * https://github.com/Donitzo/simple-scrubber-js
+ */
+
 const BAR_COLOR = '#003680';
 const BAR_COLOR_OUTSIDE = '#9d4e4e';
 const PILL_COLOR = '#003680';
