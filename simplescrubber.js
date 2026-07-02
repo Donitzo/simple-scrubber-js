@@ -283,9 +283,8 @@ const attachScrubber = input => {
 
             const min = input.min === '' ? -Infinity : Number(input.min);
             const max = input.max === '' ? Infinity : Number(input.max);
-            const stepsMoved = Math.round(distance / pixelsPerStep);
-            const rawNextValue = startValue + stepsMoved * step;
-            const nextValue = Math.min(Math.max(rawNextValue, min), max);
+            const steps = Math.round(distance / pixelsPerStep);
+            const nextValue = Math.min(Math.max(startValue + steps * step, min), max);
 
             dragged = dragged || stepsMoved !== 0;
 
@@ -295,11 +294,12 @@ const attachScrubber = input => {
                 setInputValue(input, nextValue, false);
             }
 
+            const distance = steps * pixelsPerStep;
             const clampedDistance = (nextValue - startValue) / step * pixelsPerStep;
 
             drawScrubber({
-                x: e.clientX,
-                y: e.clientY,
+                x: vertical ? startX : startX + distance,
+                y: vertical ? startY - distance : startY,
                 clampedX: vertical ? startX : startX + clampedDistance,
                 clampedY: vertical ? startY - clampedDistance : startY,
                 value: input.value,
