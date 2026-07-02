@@ -114,7 +114,7 @@ const drawScrubber = options => {
         const lineX = controlRect.left + controlRect.width / 2;
         const controlCenterY = controlRect.top + controlRect.height / 2;
 
-        const side = options.clampedY < controlCenterY ? -1 : 1;
+        const side = options.y < controlCenterY ? -1 : 1;
         const anchorY = side < 0 ? paddedRect.top : paddedRect.bottom;
 
         pillRect = {
@@ -154,7 +154,7 @@ const drawScrubber = options => {
         const lineY = controlRect.top + controlRect.height / 2;
         const controlCenterX = controlRect.left + controlRect.width / 2;
 
-        const side = options.clampedX < controlCenterX ? -1 : 1;
+        const side = options.x < controlCenterX ? -1 : 1;
         const anchorX = side < 0 ? paddedRect.left : paddedRect.right;
 
         pillRect = {
