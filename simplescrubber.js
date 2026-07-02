@@ -247,7 +247,7 @@ const attachScrubber = input => {
         drawScrubber({
             x: startX,
             y: startY,
-            value: input.value || startValue,
+            value: startValue,
             vertical,
             controlRect: input.getBoundingClientRect(),
         });
@@ -264,7 +264,11 @@ const attachScrubber = input => {
             moveEvent.preventDefault();
 
             const stepsMoved = Math.round(distance / pixelsPerStep);
-            const nextValue = startValue + stepsMoved * step;
+            const rawNextValue = startValue + stepsMoved * step;
+
+            const min = input.min === '' ? -Infinity : Number(input.min);
+            const max = input.max === '' ? Infinity : Number(input.max);
+            const nextValue = Math.min(Math.max(rawNextValue, min), max);
 
             dragged = dragged || stepsMoved !== 0;
 
@@ -274,9 +278,11 @@ const attachScrubber = input => {
                 setInputValue(input, nextValue, false);
             }
 
+            const clampedDistance = (nextValue - startValue) / step * pixelsPerStep;
+            
             drawScrubber({
-                x: moveEvent.clientX,
-                y: moveEvent.clientY,
+                x: vertical ? startX : startX + clampedDistance,
+                y: vertical ? startY - clampedDistance : startY,
                 value: input.value,
                 vertical,
                 controlRect: input.getBoundingClientRect(),
@@ -298,7 +304,7 @@ const attachScrubber = input => {
             input.removeEventListener('lostpointercapture', onPointerUp);
 
             if (dragged) {
-                setInputValue(input, latestValue, true);
+                setInputValue(input, Number(input.value), true);
             }
 
             if (overlay.ctx !== null) {
