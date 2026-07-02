@@ -1,4 +1,5 @@
 const BAR_COLOR = '#003680';
+const BAR_COLOR_OUTSIDE = '#873f3f';
 const PILL_COLOR = '#003680';
 const TEXT_COLOR = '#fff';
 
@@ -25,7 +26,7 @@ const setInputValue = (input, value, shouldCommit) => {
 
     const clampedValue = Math.min(Math.max(value, min), max);
     const roundedValue = Number(clampedValue.toFixed(15));
-    
+
     input.value = String(roundedValue);
 
     input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -104,24 +105,23 @@ const drawScrubber = options => {
         Math.ceil(ctx.measureText(String(value)).width + PILL_X_PADDING)
     );
 
-    ctx.strokeStyle = BAR_COLOR;
-    ctx.lineWidth = LINE_WIDTH;
-
     let pillRect;
     let pillVisible;
+
+    ctx.lineWidth = LINE_WIDTH;
 
     if (options.vertical) {
         const lineX = controlRect.left + controlRect.width / 2;
         const controlCenterY = controlRect.top + controlRect.height / 2;
 
-        const side = options.y < controlCenterY ? -1 : 1;
+        const side = options.clampedY < controlCenterY ? -1 : 1;
         const anchorY = side < 0 ? paddedRect.top : paddedRect.bottom;
 
         pillRect = {
             left: lineX - pillWidth / 2,
             right: lineX + pillWidth / 2,
-            top: options.y - PILL_HEIGHT / 2,
-            bottom: options.y + PILL_HEIGHT / 2,
+            top: options.clampedY - PILL_HEIGHT / 2,
+            bottom: options.clampedY + PILL_HEIGHT / 2,
         };
         pillVisible = !(
             pillRect.left < paddedRect.right &&
@@ -129,17 +129,24 @@ const drawScrubber = options => {
             pillRect.top < paddedRect.bottom &&
             pillRect.bottom > paddedRect.top
         );
-        const lineEndY = pillVisible
-            ? side < 0
-                ? pillRect.bottom
-                : pillRect.top
-            : side < 0
-                ? Math.min(options.y, anchorY)
-                : Math.max(options.y, anchorY);
+        const lineEndClampedY = side < 0 ?
+            Math.min(options.clampedY, anchorY) :
+            Math.max(options.clampedY, anchorY);
+        const lineEndY = side < 0 ?
+            Math.min(options.y, anchorY) :
+            Math.max(options.y, anchorY);
 
-        if (anchorY !== lineEndY) {
+        if (anchorY !== lineEndClampedY) {
+            ctx.strokeStyle = BAR_COLOR;
             ctx.beginPath();
             ctx.moveTo(lineX, anchorY);
+            ctx.lineTo(lineX, lineEndClampedY);
+            ctx.stroke();
+        }
+        if (lineEndClampedY !== lineEndY) {
+            ctx.strokeStyle = BAR_COLOR_OUTSIDE;
+            ctx.beginPath();
+            ctx.moveTo(lineX, lineEndClampedY);
             ctx.lineTo(lineX, lineEndY);
             ctx.stroke();
         }
@@ -147,12 +154,12 @@ const drawScrubber = options => {
         const lineY = controlRect.top + controlRect.height / 2;
         const controlCenterX = controlRect.left + controlRect.width / 2;
 
-        const side = options.x < controlCenterX ? -1 : 1;
+        const side = options.clampedX < controlCenterX ? -1 : 1;
         const anchorX = side < 0 ? paddedRect.left : paddedRect.right;
 
         pillRect = {
-            left: options.x - pillWidth / 2,
-            right: options.x + pillWidth / 2,
+            left: options.clampedX - pillWidth / 2,
+            right: options.clampedX + pillWidth / 2,
             top: lineY - PILL_HEIGHT / 2,
             bottom: lineY + PILL_HEIGHT / 2,
         };
@@ -162,17 +169,24 @@ const drawScrubber = options => {
             pillRect.top < paddedRect.bottom &&
             pillRect.bottom > paddedRect.top
         );
-        const lineEndX = pillVisible
-            ? side < 0
-                ? pillRect.right
-                : pillRect.left
-            : side < 0
-                ? Math.min(options.x, anchorX)
-                : Math.max(options.x, anchorX);
+        const lineEndClampedX = side < 0 ?
+            Math.min(options.clampedX, anchorX) :
+            Math.max(options.clampedX, anchorX);
+        const lineEndX = side < 0 ?
+            Math.min(options.x, anchorX) :
+            Math.max(options.x, anchorX);
 
-        if (anchorX !== lineEndX) {
+        if (anchorX !== lineEndClampedX) {
+            ctx.strokeStyle = BAR_COLOR;
             ctx.beginPath();
             ctx.moveTo(anchorX, lineY);
+            ctx.lineTo(lineEndClampedX, lineY);
+            ctx.stroke();
+        }
+        if (lineEndClampedX !== lineEndX) {
+            ctx.strokeStyle = BAR_COLOR_OUTSIDE;
+            ctx.beginPath();
+            ctx.moveTo(lineEndClampedX, lineY);
             ctx.lineTo(lineEndX, lineY);
             ctx.stroke();
         }
@@ -247,6 +261,8 @@ const attachScrubber = input => {
         drawScrubber({
             x: startX,
             y: startY,
+            clampedX: startX,
+            clampedY: startY,
             value: startValue,
             vertical,
             controlRect: input.getBoundingClientRect(),
@@ -263,11 +279,10 @@ const attachScrubber = input => {
 
             moveEvent.preventDefault();
 
-            const stepsMoved = Math.round(distance / pixelsPerStep);
-            const rawNextValue = startValue + stepsMoved * step;
-
             const min = input.min === '' ? -Infinity : Number(input.min);
             const max = input.max === '' ? Infinity : Number(input.max);
+            const stepsMoved = Math.round(distance / pixelsPerStep);
+            const rawNextValue = startValue + stepsMoved * step;
             const nextValue = Math.min(Math.max(rawNextValue, min), max);
 
             dragged = dragged || stepsMoved !== 0;
@@ -279,10 +294,12 @@ const attachScrubber = input => {
             }
 
             const clampedDistance = (nextValue - startValue) / step * pixelsPerStep;
-            
+
             drawScrubber({
-                x: vertical ? startX : startX + clampedDistance,
-                y: vertical ? startY - clampedDistance : startY,
+                x: moveEvent.clientX,
+                y: moveEvent.clientY,
+                clampedX: vertical ? startX : startX + clampedDistance,
+                clampedY: vertical ? startY - clampedDistance : startY,
                 value: input.value,
                 vertical,
                 controlRect: input.getBoundingClientRect(),
@@ -347,7 +364,7 @@ window.addEventListener('load', () => {
 
     window.addEventListener('resize', resizeOverlayCanvas);
     window.addEventListener('scroll', resizeOverlayCanvas);
-    
+
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', resizeOverlayCanvas);
         window.visualViewport.addEventListener('scroll', resizeOverlayCanvas);
