@@ -57,7 +57,7 @@ const getViewport = () => {
 
 const resizeOverlayCanvas = () => {
     const viewport = getViewport();
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = window.devicePixelRatio ?? 1;
 
     overlay.width = Math.round(viewport.width);
     overlay.height = Math.round(viewport.height);
@@ -248,8 +248,10 @@ const attachScrubber = input => {
         const startX = event.clientX;
         const startY = event.clientY;
 
-        const startValue = Number(input.value || input.min || 0);
-        const step = Number(input.step || 1);
+        const rawStartValue = input.value !== '' ? Number(input.value) : Number(input.min);
+        const startValue = Number.isFinite(rawStartValue) ? rawStartValue : 0;
+        const rawStep = input.step === '' || input.step === 'any' ? 1 : Number(input.step);
+        const step = Number.isFinite(rawStep) && rawStep > 0 ? rawStep : 1;
         const pixelsPerStep = Number(input.dataset.scrubberPixelsPerStep);
 
         let dragged = false;
