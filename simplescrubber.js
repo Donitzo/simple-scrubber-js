@@ -294,12 +294,12 @@ const attachScrubber = input => {
                 setInputValue(input, nextValue, false);
             }
 
-            const distance = steps * pixelsPerStep;
+            const rawDistance = steps * pixelsPerStep;
             const clampedDistance = (nextValue - startValue) / step * pixelsPerStep;
 
             drawScrubber({
-                x: vertical ? startX : startX + distance,
-                y: vertical ? startY - distance : startY,
+                x: vertical ? startX : startX + rawDistance,
+                y: vertical ? startY - rawDistance : startY,
                 clampedX: vertical ? startX : startX + clampedDistance,
                 clampedY: vertical ? startY - clampedDistance : startY,
                 value: input.value,
