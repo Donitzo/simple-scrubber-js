@@ -1,5 +1,5 @@
 const BAR_COLOR = '#003680';
-const BAR_COLOR_OUTSIDE = '#873f3f';
+const BAR_COLOR_OUTSIDE = '#9d4e4e';
 const PILL_COLOR = '#003680';
 const TEXT_COLOR = '#fff';
 
