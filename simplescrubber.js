@@ -270,16 +270,16 @@ const attachScrubber = input => {
             controlRect: input.getBoundingClientRect(),
         });
 
-        const onPointerMove = moveEvent => {
-            if (moveEvent.pointerId !== pointerId) {
+        const handlePointerMove = e => {
+            if (e.pointerId !== pointerId) {
                 return;
             }
 
             const distance = vertical
-                ? startY - moveEvent.clientY
-                : moveEvent.clientX - startX;
+                ? startY - e.clientY
+                : e.clientX - startX;
 
-            moveEvent.preventDefault();
+            e.preventDefault();
 
             const min = input.min === '' ? -Infinity : Number(input.min);
             const max = input.max === '' ? Infinity : Number(input.max);
@@ -298,8 +298,8 @@ const attachScrubber = input => {
             const clampedDistance = (nextValue - startValue) / step * pixelsPerStep;
 
             drawScrubber({
-                x: moveEvent.clientX,
-                y: moveEvent.clientY,
+                x: e.clientX,
+                y: e.clientY,
                 clampedX: vertical ? startX : startX + clampedDistance,
                 clampedY: vertical ? startY - clampedDistance : startY,
                 value: input.value,
@@ -308,8 +308,8 @@ const attachScrubber = input => {
             });
         };
 
-        const onPointerUp = upEvent => {
-            if (upEvent.pointerId !== pointerId) {
+        const handlePointerUp = e => {
+            if (e.pointerId !== pointerId) {
                 return;
             }
 
@@ -317,10 +317,10 @@ const attachScrubber = input => {
                 input.releasePointerCapture(pointerId);
             }
 
-            input.removeEventListener('pointermove', onPointerMove);
-            input.removeEventListener('pointerup', onPointerUp);
-            input.removeEventListener('pointercancel', onPointerUp);
-            input.removeEventListener('lostpointercapture', onPointerUp);
+            input.removeEventListener('pointermove', handlePointerMove);
+            input.removeEventListener('pointerup', handlePointerUp);
+            input.removeEventListener('pointercancel', handlePointerUp);
+            input.removeEventListener('lostpointercapture', handlePointerUp);
 
             if (dragged) {
                 setInputValue(input, Number(input.value), true);
@@ -331,10 +331,10 @@ const attachScrubber = input => {
             }
         };
 
-        input.addEventListener('pointermove', onPointerMove);
-        input.addEventListener('pointerup', onPointerUp);
-        input.addEventListener('pointercancel', onPointerUp);
-        input.addEventListener('lostpointercapture', onPointerUp);
+        input.addEventListener('pointermove', handlePointerMove);
+        input.addEventListener('pointerup', handlePointerUp);
+        input.addEventListener('pointercancel', handlePointerUp);
+        input.addEventListener('lostpointercapture', handlePointerUp);
     });
 };
 
