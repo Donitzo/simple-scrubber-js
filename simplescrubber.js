@@ -286,7 +286,7 @@ const attachScrubber = input => {
             const steps = Math.round(distance / pixelsPerStep);
             const nextValue = Math.min(Math.max(startValue + steps * step, min), max);
 
-            dragged = dragged || stepsMoved !== 0;
+            dragged = dragged || steps !== 0;
 
             if (latestValue !== nextValue) {
                 latestValue = nextValue;
