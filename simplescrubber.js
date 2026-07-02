@@ -62,10 +62,10 @@ const resizeOverlayCanvas = () => {
     overlay.height = viewport.height;
 
     Object.assign(overlay.canvas.style, {
-        left: `${viewport.left}px`,
-        top: `${viewport.top}px`,
-        width: `${viewport.width}px`,
-        height: `${viewport.height}px`,
+        left: `${Math.round(viewport.left)}px`,
+        top: `${Math.round(viewport.top)}px`,
+        width: `${Math.round(viewport.width)}px`,
+        height: `${Math.round(viewport.height)}px`,
     });
 
     overlay.canvas.width = Math.round(viewport.width * dpr);
