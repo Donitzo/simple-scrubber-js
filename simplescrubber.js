@@ -143,7 +143,7 @@ const drawScrubber = options => {
             ctx.lineTo(lineX, lineEndClampedY);
             ctx.stroke();
         }
-        if (lineEndClampedY !== lineEndY) {
+        if (Math.abs(lineEndClampedY - lineEndY) > 1) {
             ctx.strokeStyle = BAR_COLOR_OUTSIDE;
             ctx.beginPath();
             ctx.moveTo(lineX, lineEndClampedY);
@@ -183,7 +183,7 @@ const drawScrubber = options => {
             ctx.lineTo(lineEndClampedX, lineY);
             ctx.stroke();
         }
-        if (lineEndClampedX !== lineEndX) {
+        if (Math.abs(lineEndClampedX - lineEndX) > 1) {
             ctx.strokeStyle = BAR_COLOR_OUTSIDE;
             ctx.beginPath();
             ctx.moveTo(lineEndClampedX, lineY);
