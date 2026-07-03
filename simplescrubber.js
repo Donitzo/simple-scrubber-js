@@ -250,8 +250,9 @@ const attachScrubber = input => {
         const pointerId = event.pointerId;
         const vertical = input.hasAttribute('data-scrubber-vertical');
 
-        const startX = event.clientX;
-        const startY = event.clientY;
+        let startX = event.clientX;
+        let startY = event.clientY;
+        let lastControlRect = input.getBoundingClientRect();
 
         const rawStartValue = input.value !== '' ? Number(input.value) : Number(input.min);
         const startValue = Number.isFinite(rawStartValue) ? rawStartValue : 0;
@@ -272,14 +273,21 @@ const attachScrubber = input => {
             clampedY: startY,
             value: startValue,
             vertical,
-            controlRect: input.getBoundingClientRect(),
+            controlRect: lastControlRect,
         });
 
         const handlePointerMove = e => {
             if (e.pointerId !== pointerId) {
                 return;
             }
-
+            
+            const controlRect = input.getBoundingClientRect();
+            
+            startX += controlRect.left - lastControlRect.left;
+            startY += controlRect.top - lastControlRect.top;
+            
+            lastControlRect = controlRect;
+            
             const distance = vertical
                 ? startY - e.clientY
                 : e.clientX - startX;
@@ -309,7 +317,7 @@ const attachScrubber = input => {
                 clampedY: vertical ? startY - clampedDistance : startY,
                 value: input.value,
                 vertical,
-                controlRect: input.getBoundingClientRect(),
+                controlRect: lastControlRect,
             });
         };
 
